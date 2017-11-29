@@ -39,6 +39,10 @@ class ProcessManager:
             # alocou para a fila de usuario
             self.fila_principal.pop()
             self.fila_usuario.insert(0, processo_topo)
+        else:
+            # Caso ele não tenha conseguido alocar o processo nas filas
+            return False
+        return True
 
     def escalona_processo_usuario(self):
         """
@@ -46,9 +50,24 @@ class ProcessManager:
         """
         processo_topo = fila_usuario[len(self.fila_usuario) - 1]
         # aloca para a fila de prioridades
-        if (proceso_topo.prioridade == 1):
+        if len(prioridade_1) < 1000:
             self.prioridade_1.insert(0, processo_topo)
-        elif (proceso_topo.prioridade == 2):
-            self.prioridade_2.insert(0, processo_topo)
-        elif (proceso_topo.prioridade == 3):
-            self.prioridade_3.insert(0, processo_topo)
+        else:
+            return False
+        return True
+
+#  tem que pegar o processo de menor prioridade
+    def muda_prioridade(self):
+        processo = self.prioridade_1.pop()
+        arr1 = []
+        arr2 = []
+        for item in self.prioridade_1:
+            arr1.insert(0, item.prioridade)
+
+        for item in self.prioridade_2:
+            arr2.insert(0, item.prioridade)
+
+        self.prioridade_2.insert(0, processo)
+        if len(self.prioridade_2) < 1000:
+            processo
+        elif len(prioridade_3 < 1000):
