@@ -57,16 +57,3 @@ class ProcessManager:
         else:
             return False
         return True
-
-#  tem que pegar o processo de menor prioridade
-    def muda_prioridade(self):
-        # ordena o array por prioridade
-        self.prioridade_1.sort(key=operator.itemgetter('prioridade'))
-        p_troca = {}
-        # pega o elemento da fila_usuario
-        processo = self.fila_usuario.pop()
-        # se esse elemento possuir uma prioridade maior que o de menor prioridade
-        if processo['prioridade'] > self.prioridade_1[len(self.prioridade_1)]['prioridade']:
-            p_troca = self.prioridade_1.pop()
-            self.prioridade_1.insert(0, processo)
-            if p_troca['prioridade'] > 
