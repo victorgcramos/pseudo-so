@@ -1,14 +1,16 @@
 from threading import Thread
+import operator
 
 class Process:
-    tempo_init = 0
-    prioridade = 0
-    tempo_processador = 0
-    blocos_memoria = 0
-    numero_impressora = 0
-    requisicao_scanner = 0
-    requisicao_modem = 0
-    numero_disco = 0
+    def __init__(self):
+        self.tempo_init = 0
+        self.prioridade = 0
+        self.tempo_processador = 0
+        self.blocos_memoria = 0
+        self.numero_impressora = 0
+        self.requisicao_scanner = 0
+        self.requisicao_modem = 0
+        self.numero_disco = 0
 
 class ProcessManager:
     fila_tempo_real = []
@@ -31,7 +33,7 @@ class ProcessManager:
         processo_topo = self.fila_principal[len(self.fila_principal) - 1]
 
         # distribui os processos ao longo das filas de usuario e tempo real
-        if (processo_topo.prioridade == 0 && len(self.fila_tempo_real) < 1000):
+        if (processo_topo['prioridade'] == 0 && len(self.fila_tempo_real) < 1000):
             self.fila_principal.pop()
             self.fila_tempo_real.insert(0, processo_topo)
 
@@ -58,16 +60,13 @@ class ProcessManager:
 
 #  tem que pegar o processo de menor prioridade
     def muda_prioridade(self):
-        processo = self.prioridade_1.pop()
-        arr1 = []
-        arr2 = []
-        for item in self.prioridade_1:
-            arr1.insert(0, item.prioridade)
-
-        for item in self.prioridade_2:
-            arr2.insert(0, item.prioridade)
-
-        self.prioridade_2.insert(0, processo)
-        if len(self.prioridade_2) < 1000:
-            processo
-        elif len(prioridade_3 < 1000):
+        # ordena o array por prioridade
+        self.prioridade_1.sort(key=operator.itemgetter('prioridade'))
+        p_troca = {}
+        # pega o elemento da fila_usuario
+        processo = self.fila_usuario.pop()
+        # se esse elemento possuir uma prioridade maior que o de menor prioridade
+        if processo['prioridade'] > self.prioridade_1[len(self.prioridade_1)]['prioridade']:
+            p_troca = self.prioridade_1.pop()
+            self.prioridade_1.insert(0, processo)
+            if p_troca['prioridade'] > 
