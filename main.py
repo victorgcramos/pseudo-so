@@ -13,6 +13,8 @@ def main ():
     manager = pm.ProcessManager()
     memory = mm.MemoryManager()
     manager.fila_principal = list(sorted(processes, key=operator.itemgetter('tempo_init')))
+
+    # quantum
     t = 0
     while(True):
         #Se tiver processo ainda nao processado
