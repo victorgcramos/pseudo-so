@@ -51,9 +51,18 @@ class ProcessManager:
         Escalona os processos de usuario nas filas de prioridades
         """
         processo_topo = fila_usuario[len(self.fila_usuario) - 1]
+
         # aloca para a fila de prioridades
-        if len(prioridade_1) < 1000:
+        elif (processo_topo['prioridade'] == 1 && len(self.prioridade_1) < 1000):
+            self.fila_usuario.pop()
             self.prioridade_1.insert(0, processo_topo)
+        elif (processo_topo['prioridade'] == 2 && len(self.prioridade_2) < 1000):
+            self.fila_usuario.pop()
+            self.prioridade_2.insert(0, processo_topo)
+        elif (processo_topo['prioridade'] == 3 && len(self.prioridade_3) < 1000):
+            self.fila_usuario.pop()
+            self.prioridade_3.insert(0, processo_topo)
         else:
             return False
+
         return True
