@@ -24,6 +24,7 @@ def main ():
             while(manager.fila_usuario):
                 manager.escalona_processo_usuario()
         #Executa tempo real se tiver
+
         if(manager.fila_tempo_real):
             print 'tempo_real'
             if(manager.em_execucao):
@@ -33,30 +34,47 @@ def main ():
                     if(offset != None):
                         manager.em_execucao = manager.fila_tempo_real.pop(0)
                         manager.em_execucao['offset'] = offset
-                    #EXECUTA TR
-                else:
-                    print p
-                    #CONTINUA EXECUCAO
+
             else:
                 offset = memory.salva(manager.fila_tempo_real[0])
                 if(offset != None):
                     manager.em_execucao = manager.fila_tempo_real.pop(0)
                     manager.em_execucao['offset'] = offset
-                #EXECUTA TR
+
         #Processa execucao de usuario
         elif(manager.prioridade_1 or manager.prioridade_2 or manager.prioridade_3):
-            if(manager.em_execucao):
-                #CONTINUA excucao
-            else:
-                # nao tem interrupcao
-                if manager.prioridade_1:
+            # nao tem interrupcao
+            if manager.prioridade_1:
+                if not(manager.prioridade_1[0]['offset']):
                     offset = memory.salva(manager.prioridade_1[0])
-                    if(offset != None):
-                        manager.em_execucao = manager.prioridade_1.pop(0)
-                        manager.em_execucao['offset'] = offset
-                    pass
+                else:
+                    offset = manager.prioridade_1[0]['offset']
+                if(offset != None):
+                    manager.em_execucao = manager.prioridade_1.pop(0)
+                    manager.em_execucao['offset'] = offset
+
+            # para os processos de prioridade 2
+            elif manager.prioridade_2:
+                if not(manager.prioridade_2[0]['offset']):
+                    offset = memory.salva(manager.prioridade_2[0])
+                else:
+                    offset = manager.prioridade_2[0]['offset']
+                if(offset != None):
+                    manager.em_execucao = manager.prioridade_2.pop(0)
+                    manager.em_execucao['offset'] = offset
+
+            # para os processos de prioridade 3
+            elif manager.prioridade_3:
+                if not(manager.prioridade_3[0]['offset']):
+                    offset = memory.salva(manager.prioridade_3[0])
+                else:
+                    offset = manager.prioridade_3[0]['offset']
+                if(offset != None):
+                    manager.em_execucao = manager.prioridade_3.pop(0)
+                    manager.em_execucao['offset'] = offset
         else:
             break
+        # OLHA A EXECUCAAAAAAO
         manager.em_execucao['tempo_processador'] -= 1
         if manager.em_execucao['tempo_processador'] == 0:
             memory.mata(manager.em_execucao)
