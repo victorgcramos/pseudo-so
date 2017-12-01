@@ -14,7 +14,7 @@ class MemoryManager:
                 if(bloco == None):
                     disponiveis += 1
                     if(disponiveis == processo['blocos_memoria']):
-                        offset = i - disponiveis
+                        offset = i - disponiveis + 1
                         for j in range(disponiveis):
                             self.tempo_real[offset + j] = processo['PID']
                         break
@@ -27,7 +27,7 @@ class MemoryManager:
                 if(bloco == None):
                     disponiveis += 1
                     if(disponiveis == processo['blocos_memoria']):
-                        offset = i - disponiveis
+                        offset = i - disponiveis + 1
                         for j in range(disponiveis):
                             self.usuario[offset + j] = processo['PID']
                         break
