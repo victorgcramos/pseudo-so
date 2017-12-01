@@ -28,9 +28,13 @@ class ProcessManager:
         """
         Escalona os processos nas filas de usuario ou fila de tempo real
         """
+
+        if(not(self.fila_principal)):
+            return False
+
         processo_topo = self.fila_principal[0]
-        processo_topo['PID'] = ultimoPID
-        ultimoPID += 1
+        processo_topo['PID'] = self.ultimoPID
+        self.ultimoPID += 1
 
         # distribui os processos ao longo das filas de usuario e tempo real
         if ((processo_topo['prioridade'] == 0) and (len(self.fila_tempo_real) < 1000)):
@@ -50,7 +54,10 @@ class ProcessManager:
         """
         Escalona os processos de usuario nas filas de prioridades
         """
-        processo_topo = fila_usuario[len(self.fila_usuario) - 1]
+        if(not(self.fila_usuario)):
+            return False
+
+        processo_topo = self.fila_usuario[0]
 
         # aloca para a fila de prioridades
         if (processo_topo['prioridade'] == 1 and len(self.prioridade_1) < 1000):
