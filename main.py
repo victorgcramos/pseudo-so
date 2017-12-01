@@ -1,17 +1,28 @@
 import memory_manager as mm
 # import io_manager as iom
-# import file_manager as fm
+import file_manager as fm
 import process_manager as pm
 import operator
 
 
 def main ():
+    manager = pm.ProcessManager()
+    memory = mm.MemoryManager()
+    filesystem = fm.FileManager()
     with open('processes.txt', 'r') as f:
         procs = [[int(x) for x in line.split(',')] for line in f]
         processes = [pm.Process(x).__dict__ for x in procs]
+    with open('files.txt', 'r') as f:
+        temp = f.read().splitlines()
+        filesystem.qtd_blocos = int(temp[0])
+        filesystem.qtd_segmentos = int(temp[1])
+        filesystem.arquivos = [fm.File(temp[i].split(',')).__dict__
+                                for i in range(2, filesystem.qtd_segmentos+2)]
+        filesystem.operacoes = [fm.FileOperation(temp[i].split(',')).__dict__
+                                for i in range(filesystem.qtd_segmentos+3, len(temp))]
+
+    import ipdb; ipdb.set_trace()
     # print processes
-    manager = pm.ProcessManager()
-    memory = mm.MemoryManager()
     manager.fila_principal = list(sorted(processes, key=operator.itemgetter('tempo_init')))
     # quantum
     t = 0
