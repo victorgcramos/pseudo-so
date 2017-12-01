@@ -23,6 +23,7 @@ def main ():
 
     import ipdb; ipdb.set_trace()
     # print processes
+    filesystem.inicia_disco()
     manager.fila_principal = list(sorted(processes, key=operator.itemgetter('tempo_init')))
     # quantum
     t = 0
