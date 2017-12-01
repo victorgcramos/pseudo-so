@@ -23,5 +23,4 @@ class FileManager:
     def inicia_disco(self):
         self.disco = [0 for i in range(self.qtd_blocos)]
         for arq in self.arquivos:
-            for i in range(arq['tamanho']):
-                self.disco[arq['bloco_inicio'] + i] = arq['nome']
+            self.disco[arq['bloco_inicio']:arq['bloco_inicio'] + arq['tamanho']] = arq['tamanho']*[arq['nome']]
