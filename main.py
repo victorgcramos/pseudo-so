@@ -117,7 +117,7 @@ def main ():
                             manager.ultimoPID -= 1
             elif(not (manager.fila_principal)):
                 break
-        # OLHA A EXECUCAAAAAAO
+        # EXECUCO
         if(manager.em_execucao):
             manager.em_execucao['tempo_processador'] -= 1
             manager.em_execucao['execucoes'] += 1
