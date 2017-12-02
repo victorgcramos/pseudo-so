@@ -73,5 +73,7 @@ class ProcessManager:
 
         return True
     def gera_pid(self):
+        ''' Gera um PID e calcula o proximo
+        '''
         self.ultimoPID += 1
         return self.ultimoPID - 1
