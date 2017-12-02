@@ -66,9 +66,10 @@ class FileManager:
             #CODIGO PARA DELECAO
             else:
                 arquivo = next((arq for arq in self.arquivos if arq['nome'] == op['arquivo']), None)
+                # import ipdb; ipdb.set_trace()
                 if arquivo is not None:
                     if (processo['prioridade'] == 0) or (arquivo['criador'] == None or processo['PID'] == arquivo['criador']):
-                        self.deleta_arquivo(arquivo['nome'])
+                        self.deleta_arquivo(arquivo)
                         self.log.append({
                             "status": 'Sucesso',
                             "mensagem":'O processo {} deletou o arquivo {}'.format(

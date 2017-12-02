@@ -19,9 +19,9 @@ def main ():
         temp = f.read().splitlines()
         filesystem.qtd_blocos = int(temp[0])
         filesystem.qtd_segmentos = int(temp[1])
-        filesystem.arquivos = [fm.File(temp[i].split(',')).__dict__
+        filesystem.arquivos = [fm.File(temp[i].replace(' ', '').split(',')).__dict__
                                 for i in range(2, filesystem.qtd_segmentos+2)]
-        filesystem.operacoes = [fm.FileOperation(temp[i].split(',')).__dict__
+        filesystem.operacoes = [fm.FileOperation(temp[i].replace(' ', '').split(',')).__dict__
                                 for i in range(filesystem.qtd_segmentos+3, len(temp))]
 
     filesystem.inicia_disco()

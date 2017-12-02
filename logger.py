@@ -36,5 +36,10 @@ class Logger:
         for l in fs.log:
             print('\tOperacao {} => {}'.format(i, l['status']))
             print('\t\t{}'.format(l['mensagem']))
+            i += 1
+        for op in fs.operacoes:
+            print('\tOperacao {} => Falha'.format(i))
+            print('\t\tO processo {} nao existe'.format(op['PID']))
+            i += 1
         print('\tMapa de Ocupacao de Disco:')
         print('\t\t{}'.format(fs.disco))
