@@ -21,6 +21,7 @@ class FileManager:
     arquivos = []
     operacoes = []
     disco = []
+    log = []
 
     def inicia_disco(self):
         self.disco = [0 for i in range(self.qtd_blocos)]
@@ -38,9 +39,20 @@ class FileManager:
                     offset = i - disponiveis + 1
                     self.disco[offset:offset+disponiveis] = tamanho * [nome]
                     arquivo = File([nome, offset, tamanho], criador=criador)
-                    break
+                    self.log.append({
+                        "status": 'Sucesso',
+                        "mensagem": 'O processo {} criou o arquivo {} (blocos de {} a {})'.format(
+                        criador, nome, offset,offset+disponiveis)
+                    })
+                    return
             else:
                 disponiveis = 0
+        self.log.append({
+            "status": 'Falha',
+            "mensagem": 'O processo {} nao criou o arquivo {} (Sem espaco livre)'.format(
+            criador, nome
+            )
+        })
 
     def deleta_arquivo(self, arquivo):
         self.disco[arquivo['bloco_inicio']:arquivo['bloco_inicio'] + arquivo['tamanho']] =  arquivo['tamanho']*[0]
@@ -55,11 +67,23 @@ class FileManager:
             else:
                 arquivo = next((arq for arq in self.arquivos if arq['nome'] == op['arquivo']), None)
                 if arquivo is not None:
-                    if(processo['prioridade'] == 0):
+                    if (processo['prioridade'] == 0) or (arquivo['criador'] == None or processo['PID'] == arquivo['criador']):
                         self.deleta_arquivo(arquivo['nome'])
-                    elif(arquivo['criador'] == None or processo['PID'] == arquivo['criador']):
-                        self.deleta_arquivo(arquivo['nome'])
+                        self.log.append({
+                            "status": 'Sucesso',
+                            "mensagem":'O processo {} deletou o arquivo {}'.format(
+                            processo['PID'], arquivo['nome'])
+                        })
                     else:
-                        print 'NAO TEM ACESSO'
+                        self.log.append({
+                            "status": 'Falha',
+                            "mensagem":'O processo {} nao pode deletar o arquivo {} (Erro de permissao)'.format(
+                            processo['PID'], arquivo['nome'])
+                        })
                 else:
-                    print 'ARQUIVO INEXISTENTE'
+                    self.log.append({
+                        "status": 'Falha',
+                        "mensagem":'O processo {} nao pode deletar o arquivo {} (Arquivo Inexistente)'.format(
+                        processo['PID'], op['arquivo'])
+                    })
+            self.operacoes.remove(op)

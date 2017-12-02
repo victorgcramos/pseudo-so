@@ -13,6 +13,7 @@ class Process:
         self.numero_disco = process[7]
         self.offset = None
         self.PID = None
+        self.execucoes = 0
 
 class ProcessManager:
     fila_tempo_real = []
@@ -33,8 +34,6 @@ class ProcessManager:
             return False
 
         processo_topo = self.fila_principal[0]
-        processo_topo['PID'] = self.ultimoPID
-        self.ultimoPID += 1
 
         # distribui os processos ao longo das filas de usuario e tempo real
         if ((processo_topo['prioridade'] == 0) and (len(self.fila_tempo_real) < 1000)):
@@ -73,3 +72,6 @@ class ProcessManager:
             return False
 
         return True
+    def gera_pid(self):
+        self.ultimoPID += 1
+        return self.ultimoPID - 1
