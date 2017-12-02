@@ -26,5 +26,4 @@ class MemoryManager:
         return offset
 
     def mata (self, processo):
-        for i in range(processo['offset'], processo['offset'] + processo['blocos_memoria']):
-            self.memoria[i] = None
+        self.memoria[processo['offset']: processo['offset'] + processo['blocos_memoria']] =  processo['blocos_memoria']*[None]

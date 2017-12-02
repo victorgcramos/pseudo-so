@@ -1,11 +1,13 @@
 class File:
-    def __init__(self, arquivo):
+    def __init__(self, arquivo, criador=None):
         self.nome = arquivo[0]
         self.bloco_inicio = int(arquivo[1])
         self.tamanho = int(arquivo[2])
+        self.criador = criador
+
 class FileOperation:
     def __init__(self, operacao):
-        self.pid = int(operacao[0])
+        self.PID = int(operacao[0])
         self.opcode = int(operacao[1])
         self.arquivo = operacao[2]
         if(self.opcode == 0):
@@ -24,3 +26,40 @@ class FileManager:
         self.disco = [0 for i in range(self.qtd_blocos)]
         for arq in self.arquivos:
             self.disco[arq['bloco_inicio']:arq['bloco_inicio'] + arq['tamanho']] = arq['tamanho']*[arq['nome']]
+
+    def cria_arquivo(self, nome, tamanho, criador):
+        offset = None
+        disponiveis = 0
+        for i in range(qtd_blocos):
+            bloco = self.disco[i]
+            if(bloco == 0):
+                disponiveis += 1
+                if(disponiveis == tamanho):
+                    offset = i - disponiveis + 1
+                    self.disco[offset:offset+disponiveis] = tamanho * [nome]
+                    arquivo = File([nome, offset, tamanho], criador=criador)
+                    break
+            else:
+                disponiveis = 0
+
+    def deleta_arquivo(self, arquivo):
+        self.disco[arquivo['bloco_inicio']:arquivo['bloco_inicio'] + arquivo['tamanho']] =  arquivo['tamanho']*[0]
+
+    def opera_processo(self, processo):
+        ops = [op for op in self.operacoes if op['PID'] == processo['PID']]
+        for op in ops:
+            #CODIGO PARA CRIACAO
+            if op['opcode'] == 0:
+                self.cria_arquivo(op['arquivo'], op['tamanho'], processo['PID'])
+            #CODIGO PARA DELECAO
+            else:
+                arquivo = next((arq for arq in self.arquivos if arq['nome'] == op['arquivo']), None)
+                if arquivo not None:
+                    if(processo['prioridade'] == 0):
+                        self.deleta_arquivo(arquivo['nome'])
+                    elif(arquivo['criador'] == None or processo['PID'] == arquivo['criador']):
+                        self.deleta_arquivo(arquivo['nome'])
+                    else:
+                        print 'NAO TEM ACESSO'
+                else:
+                    print 'ARQUIVO INEXISTENTE'
