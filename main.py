@@ -1,5 +1,5 @@
 import memory_manager as mm
-# import io_manager as iom
+import io_manager as iom
 import file_manager as fm
 import process_manager as pm
 import operator
@@ -8,6 +8,7 @@ import operator
 def main ():
     manager = pm.ProcessManager()
     memory = mm.MemoryManager()
+    io = iom.IOManager()
     filesystem = fm.FileManager()
     with open('processes.txt', 'r') as f:
         procs = [[int(x) for x in line.split(',')] for line in f]
@@ -51,34 +52,57 @@ def main ():
             #Processa execucao de usuario
             elif(manager.prioridade_1 or manager.prioridade_2 or manager.prioridade_3):
                 # nao tem interrupcao
-                if manager.prioridade_1:
-                    if not(manager.prioridade_1[0]['offset']):
-                        offset = memory.salva(manager.prioridade_1[0])
+                for novo_processo in manager.prioridade_1:
+                    #Se processo ainda nao esta na memoria
+                    if not(novo_processo['offset']):
+                        #Ve se pode ser alocado em IO
+                        if(io.aloca(novo_processo)):
+                            offset = memory.salva(novo_processo)
+                        else:
+                            offset = None
                     else:
-                        offset = manager.prioridade_1[0]['offset']
+                        offset = novo_processo['offset']
+                    #Se o processo puder ser executado, carrega para a CPU
                     if(offset != None):
-                        manager.em_execucao = manager.prioridade_1.pop(0)
+                        manager.em_execucao = manager.prioridade_1.pop(manager.prioridade_1.index(novo_processo))
                         manager.em_execucao['offset'] = offset
+                        break
 
                 # para os processos de prioridade 2
-                elif manager.prioridade_2:
-                    if not(manager.prioridade_2[0]['offset']):
-                        offset = memory.salva(manager.prioridade_2[0])
-                    else:
-                        offset = manager.prioridade_2[0]['offset']
-                    if(offset != None):
-                        manager.em_execucao = manager.prioridade_2.pop(0)
-                        manager.em_execucao['offset'] = offset
+                if(manager.em_execucao == {}):
+                    for novo_processo in manager.prioridade_2:
+                        #Se processo ainda nao esta na memoria
+                        if not(novo_processo['offset']):
+                            #Ve se pode ser alocado em IO
+                            if(io.aloca(novo_processo)):
+                                offset = memory.salva(novo_processo)
+                            else:
+                                offset = None
+                        else:
+                            offset = novo_processo['offset']
+                        #Se o processo puder ser executado, carrega para a CPU
+                        if(offset != None):
+                            manager.em_execucao = manager.prioridade_2.pop(manager.prioridade_2.index(novo_processo))
+                            manager.em_execucao['offset'] = offset
+                            break
 
                 # para os processos de prioridade 3
-                elif manager.prioridade_3:
-                    if not(manager.prioridade_3[0]['offset']):
-                        offset = memory.salva(manager.prioridade_3[0])
-                    else:
-                        offset = manager.prioridade_3[0]['offset']
-                    if(offset != None):
-                        manager.em_execucao = manager.prioridade_3.pop(0)
-                        manager.em_execucao['offset'] = offset
+                if(manager.em_execucao == {}):
+                    for novo_processo in manager.prioridade_3:
+                        #Se processo ainda nao esta na memoria
+                        if not(novo_processo['offset']):
+                            #Ve se pode ser alocado em IO
+                            if(io.aloca(novo_processo)):
+                                offset = memory.salva(novo_processo)
+                            else:
+                                offset = None
+                        else:
+                            offset = novo_processo['offset']
+                        #Se o processo puder ser executado, carrega para a CPU
+                        if(offset != None):
+                            manager.em_execucao = manager.prioridade_3.pop(manager.prioridade_3.index(novo_processo))
+                            manager.em_execucao['offset'] = offset
+                            break
             elif(not (manager.fila_principal)):
                 break
         # OLHA A EXECUCAAAAAAO
@@ -89,6 +113,7 @@ def main ():
             #MATA SE TIVER ACABADO O TEMPO
             if manager.em_execucao['tempo_processador'] == 0:
                 filesystem.opera_processo(manager.em_execucao)
+                io.libera(manager.em_execucao)
                 memory.mata(manager.em_execucao)
                 manager.em_execucao = {}
             #REMOVE DO PROCESSADOR SE FOR DE USUARIO(ANDA A FILA)
