@@ -30,7 +30,7 @@ class FileManager:
     def cria_arquivo(self, nome, tamanho, criador):
         offset = None
         disponiveis = 0
-        for i in range(qtd_blocos):
+        for i in range(self.qtd_blocos):
             bloco = self.disco[i]
             if(bloco == 0):
                 disponiveis += 1
@@ -54,7 +54,7 @@ class FileManager:
             #CODIGO PARA DELECAO
             else:
                 arquivo = next((arq for arq in self.arquivos if arq['nome'] == op['arquivo']), None)
-                if arquivo not None:
+                if arquivo is not None:
                     if(processo['prioridade'] == 0):
                         self.deleta_arquivo(arquivo['nome'])
                     elif(arquivo['criador'] == None or processo['PID'] == arquivo['criador']):

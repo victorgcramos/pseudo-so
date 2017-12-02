@@ -21,7 +21,7 @@ def main ():
         filesystem.operacoes = [fm.FileOperation(temp[i].split(',')).__dict__
                                 for i in range(filesystem.qtd_segmentos+3, len(temp))]
 
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     # print processes
     filesystem.inicia_disco()
     manager.fila_principal = list(sorted(processes, key=operator.itemgetter('tempo_init')))
@@ -88,6 +88,7 @@ def main ():
             #APOS EXECUCAO
             #MATA SE TIVER ACABADO O TEMPO
             if manager.em_execucao['tempo_processador'] == 0:
+                filesystem.opera_processo(manager.em_execucao)
                 memory.mata(manager.em_execucao)
                 manager.em_execucao = {}
             #REMOVE DO PROCESSADOR SE FOR DE USUARIO(ANDA A FILA)
