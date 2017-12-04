@@ -1,10 +1,17 @@
 class IOManager:
+    '''
+    Classe que define o gerente de E/S
+    '''
     scanner = [None]
     printer = [None, None]
     modem = [None]
     sata = [None, None]
 
     def aloca(self, processo):
+        '''
+        Analisa se os recursos estao disponiveis e aloca se estiverem
+        '''
+
         free = True
         if processo['requisicao_modem'] > 0 and self.modem[0] is not None:
             free = False
@@ -27,6 +34,9 @@ class IOManager:
         else:
             return False
     def libera(self, processo):
+        '''
+        Libera todos os recursos utilizados pelo processo
+        '''
         if self.modem[0] == processo['PID']:
             self.modem[0] = None
         if self.scanner[0] == processo['PID']:

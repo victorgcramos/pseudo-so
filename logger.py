@@ -1,7 +1,15 @@
 class Logger:
+    '''
+    Classa que admnistra a saida do programa
+    '''
+
+    #Ultimo processo a ser executado
     last_exec = None
 
     def dispatch(self, processo):
+        '''
+        Imprime informacoes do processo a ser despachado
+        '''
         if(self.last_exec != -1 and self.last_exec != None):
             print('\tP{} INTERRUPTED'.format(self.last_exec))
         self.last_exec = -1
@@ -17,12 +25,18 @@ class Logger:
         print('\tdrives:\t\t {}'.format(bool(processo['numero_disco'])))
 
     def executa(self, processo):
+        '''
+        Mostra informacoes da execucao do processo
+        STARTED quando o processo eh executado pela primeira vez
+        INTERRUPTED quando o processo deixa de ser executado antes de terminar
+        RESUMED quando um processo interrompido retorna sua execucao
+        return SIGINT quando um processo finaliza sua execucao
+        '''
         if(self.last_exec != processo['PID']):
             if(self.last_exec is not -1):
                 print('\tP{} INTERRUPTED'.format(self.last_exec))
             print('processo {} =>'.format(processo['PID']))
             if(processo['execucoes'] == 1):
-                # import ipdb; ipdb.set_trace()
                 print('\tP{} STARTED'.format(processo['PID']))
             else:
                 print('\tP{} RESUMED'.format(processo['PID']))
@@ -33,6 +47,9 @@ class Logger:
             self.last_exec = -1
 
     def disco(self, fs):
+        '''
+        Mostra as informacoes das operacoes e estado final do sistema de arquivos
+        '''
         print('Sistema de Arquivos =>')
         i = 1
         for l in fs.log:

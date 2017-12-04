@@ -1,10 +1,19 @@
+#Constantes de tamanho da memoria
 TAMANHO_TR = 64
 TAMANHO_USUARIO = 960
+
 class MemoryManager:
+    ''' Classe do gerenciador de memoria
+
+        CAMPOS: memoria - lista de blocos da memoria
+    '''
 
     memoria = [None for i in range(TAMANHO_TR + TAMANHO_USUARIO)]
 
     def salva (self, processo):
+        ''' Armazena processo na memoria, retorna None se nao foi posssvel armazenar, o
+        offset caso contrario
+        '''
         offset = None
         disponiveis = 0
         start = 0
@@ -26,4 +35,6 @@ class MemoryManager:
         return offset
 
     def mata (self, processo):
+        ''' Remove o processo da memoria
+        '''
         self.memoria[processo['offset']: processo['offset'] + processo['blocos_memoria']] =  processo['blocos_memoria']*[None]
