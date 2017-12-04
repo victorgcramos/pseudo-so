@@ -48,6 +48,16 @@ class FileManager:
         '''
         offset = None
         disponiveis = 0
+
+        if (next((arq for arq in self.arquivos if arq['nome'] == nome), None) is not None):
+            self.log.append({
+                "status": 'Falha',
+                "mensagem": 'O processo {} nao criou o arquivo {} (Arquivo ja existe no disco)'.format(
+                criador, nome
+                )
+            })
+            return
+
         #localiza espaco disponivel com First Fit e armazena
         for i in range(self.qtd_blocos):
             bloco = self.disco[i]
@@ -57,10 +67,11 @@ class FileManager:
                     offset = i - disponiveis + 1
                     self.disco[offset:offset+disponiveis] = tamanho * [nome]
                     arquivo = File([nome, offset, tamanho], criador=criador)
+                    self.arquivos.append(arquivo.__dict__)
                     self.log.append({
                         "status": 'Sucesso',
-                        "mensagem": 'O processo {} criou o arquivo {} (blocos de {} a {})'.format(
-                        criador, nome, offset,offset+disponiveis)
+                        "mensagem": 'O processo {} criou o arquivo {} (blocos {})'.format(
+                        criador, nome, range(offset,offset+disponiveis))
                     })
                     return
             else:

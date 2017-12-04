@@ -39,7 +39,7 @@ def main ():
         filesystem.arquivos = [fm.File(temp[i].replace(' ', '').split(',')).__dict__
                                 for i in range(2, filesystem.qtd_segmentos+2)]
         filesystem.operacoes = [fm.FileOperation(temp[i].replace(' ', '').split(',')).__dict__
-                                for i in range(filesystem.qtd_segmentos+3, len(temp))]
+                                for i in range(filesystem.qtd_segmentos+2, len(temp))]
 
     filesystem.inicia_disco()
     #Ordena os processos por ordem de chegada
