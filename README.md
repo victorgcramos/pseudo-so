@@ -12,7 +12,9 @@ Nossa estrutura de processos consiste em um dicionário do tipo:
     "numero_impressora": 0,
     "requisicao_scanner": 0,
     "requisicao_modem": 0,
-    "numero_disco": 0
+    "numero_disco": 0,
+    "PID": 0,
+    "offset": 0,
   }
 ```
 As filas de processos estão seguindo o esquema proposto na especificação, sendo

@@ -10,6 +10,8 @@ class Logger:
         '''
         Imprime informacoes do processo a ser despachado
         '''
+        if(self.last_exec != -1 and self.last_exec != None):
+            print('\tP{} INTERRUPTED'.format(self.last_exec))
         self.last_exec = -1
         print('dispatcher =>')
         print('\tPID:\t\t {}'.format(processo['PID']))
