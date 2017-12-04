@@ -77,3 +77,9 @@ class ProcessManager:
         '''
         self.ultimoPID += 1
         return self.ultimoPID - 1
+    def acabou(self):
+        ''' Retorna se ainda tem processo para ser processado ou Nao
+        '''
+        return (not(self.fila_usuario) and not(self.fila_principal) and not(self.fila_tempo_real)
+        and not(self.prioridade_1) and not(self.prioridade_2) and not(self.prioridade_3)
+        and not(self.em_execucao))

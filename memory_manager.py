@@ -11,7 +11,7 @@ class MemoryManager:
     memoria = [None for i in range(TAMANHO_TR + TAMANHO_USUARIO)]
 
     def salva (self, processo):
-        ''' Armazena processo na memoria, retorna None se não foi possível armazenar, o
+        ''' Armazena processo na memoria, retorna None se nao foi posssvel armazenar, o
         offset caso contrario
         '''
         offset = None

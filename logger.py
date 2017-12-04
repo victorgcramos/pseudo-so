@@ -27,7 +27,7 @@ class Logger:
     def executa(self, processo):
         '''
         Mostra informacoes da execucao do processo
-        STARTED quando o processo é executado pela primeira vez
+        STARTED quando o processo eh executado pela primeira vez
         INTERRUPTED quando o processo deixa de ser executado antes de terminar
         RESUMED quando um processo interrompido retorna sua execucao
         return SIGINT quando um processo finaliza sua execucao

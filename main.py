@@ -60,22 +60,23 @@ def main ():
         #SE NAO TEM NADA EXECUTANDO(SE TIVER VAI SER TEMPO REAL)
         if(not(manager.em_execucao)):
             #Executa tempo real se tiver
-            if(manager.fila_tempo_real):
+            for novo_processo in manager.fila_tempo_real:
                 #Tenta salvar na memoria, se tiver espaco
-                manager.fila_tempo_real[0]['PID'] = manager.gera_pid()
-                offset = memory.salva(manager.fila_tempo_real[0])
+                novo_processo['PID'] = manager.gera_pid()
+                offset = memory.salva(novo_processo)
                 #Coloca em execucao
                 if(offset is not None):
-                    manager.em_execucao = manager.fila_tempo_real.pop(0)
+                    manager.em_execucao = manager.fila_tempo_real.pop(manager.fila_tempo_real.index(novo_processo))
                     manager.em_execucao['offset'] = offset
                     logger.dispatch(manager.em_execucao)
+                    break
                 #Nao atribui PID se n conseguir salvar na memoria
                 else:
-                    manager.fila_tempo_real[0]['PID'] = None
+                    novo_processo['PID'] = None
                     manager.ultimoPID -= 1
 
             #Se nao tiver tempo real, vai ser despachado processos de usuario
-            elif(manager.prioridade_1 or manager.prioridade_2 or manager.prioridade_3):
+            else:
                 # Procura algum processo de prioridade 1 que possa ser executado
                 for novo_processo in manager.prioridade_1:
                     #Se processo ainda nao esta na memoria(nunca foi executado)
@@ -85,7 +86,8 @@ def main ():
                         if(io.aloca(novo_processo)):
                             offset = memory.salva(novo_processo)
                             novo_processo['offset'] = offset
-                            logger.dispatch(novo_processo)
+                            if offset is not None:
+                                logger.dispatch(novo_processo)
                     offset = novo_processo['offset']
                     #Se o processo puder ser executado, carrega para a CPU
                     if(offset is not None):
@@ -96,7 +98,7 @@ def main ():
                         manager.ultimoPID -= 1
 
                 # Se nao pode atribuir processos de prioridade 1(falta de processos ou recursos(memoria e io))
-                if(manager.em_execucao == {}):
+                else:
                     for novo_processo in manager.prioridade_2:
                         #Se processo ainda nao esta na memoria
                         if novo_processo['offset'] is None:
@@ -105,7 +107,8 @@ def main ():
                             if(io.aloca(novo_processo)):
                                 offset = memory.salva(novo_processo)
                                 novo_processo['offset'] = offset
-                                logger.dispatch(novo_processo)
+                                if offset is not None:
+                                    logger.dispatch(novo_processo)
                         offset = novo_processo['offset']
                         #Se o processo puder ser executado, carrega para a CPU
                         if(offset is not None):
@@ -116,7 +119,7 @@ def main ():
                             manager.ultimoPID -= 1
 
                     # Se nao pode atribuir processos de prioridade 1 ou 2(falta de processos ou recursos(memoria e io))
-                    if(manager.em_execucao == {}):
+                    else:
                         for novo_processo in manager.prioridade_3:
                             #Se processo ainda nao esta na memoria
                             if novo_processo['offset'] is None:
@@ -125,7 +128,8 @@ def main ():
                                 if(io.aloca(novo_processo)):
                                     offset = memory.salva(novo_processo)
                                     novo_processo['offset'] = offset
-                                    logger.dispatch(novo_processo)
+                                    if offset is not None:
+                                        logger.dispatch(novo_processo)
                             offset = novo_processo['offset']
                             #Se o processo puder ser executado, carrega para a CPU
                             if(offset is not None):
@@ -134,7 +138,7 @@ def main ():
                             else:
                                 novo_processo['PID'] = None
                                 manager.ultimoPID -= 1
-            elif(not (manager.fila_principal)):
+            if(manager.acabou()):
                 #Condicao de saida do programa => Nao tem nenhum processo em nenhuma fila
                 #E todos os processos ja chegaram
                 break
