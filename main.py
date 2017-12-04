@@ -12,15 +12,16 @@ def main ():
     io = iom.IOManager()
     filesystem = fm.FileManager()
     logger = log.Logger()
-    with open('processes.txt', 'r') as f:
+    with open('memoryexcept.txt', 'r') as f:
         procs = [[int(x) for x in line.split(',')] for line in f]
         processes = [pm.Process(x).__dict__ for x in procs]
-    with open('files.txt', 'r') as f:
+    with open('memoryexcept_file.txt', 'r') as f:
         temp = f.read().splitlines()
         filesystem.qtd_blocos = int(temp[0])
         filesystem.qtd_segmentos = int(temp[1])
         filesystem.arquivos = [fm.File(temp[i].replace(' ', '').split(',')).__dict__
                                 for i in range(2, filesystem.qtd_segmentos+2)]
+        # import ipdb; ipdb.set_trace()
         filesystem.operacoes = [fm.FileOperation(temp[i].replace(' ', '').split(',')).__dict__
                                 for i in range(filesystem.qtd_segmentos+3, len(temp))]
 
