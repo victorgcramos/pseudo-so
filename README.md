@@ -1,5 +1,11 @@
 # Trabalho de Sistemas Operacionais
 
+## Para executar:
+Na linha de comando:
+`$ python main.py <arquivodeprocessos> <arquivodeaarquivos>`
+
+Caso os arquivos não sejam passados corretamente, o programa tentará ler os arquivos files.txt e processes.txt 
+
 ## Gerenciador de processos
 
 Nossa estrutura de processos consiste em um dicionário do tipo:
